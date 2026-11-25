@@ -1,0 +1,10 @@
+# Keep secrets, caches and local artifacts out of the image (and out of Trivy's findings)
+.env
+.env.*
+**/__pycache__/
+**/*.pyc
+staticfiles/
+media/
+.coverage
+coverage.xml
+.git

@@ -1,0 +1,24 @@
+###############################################################################
+# Test override used by Jenkins (Lab 16) and by you locally:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.test.yml \
+#     run --rm app python manage.py test --verbosity=2
+#
+# Throwaway DB on tmpfs, no Nginx, no migrations against a real database.
+###############################################################################
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: testpassword
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  app:
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      SECRET_KEY: test-only
+      DB_PASSWORD: testpassword
+      RUN_MIGRATIONS: "false"
+
+  nginx:
+    profiles: ["donotstart"]

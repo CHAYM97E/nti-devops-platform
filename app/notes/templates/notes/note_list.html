@@ -1,0 +1,40 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NTI DevOps Notes</title>
+  <link rel="stylesheet" href="{% static 'notes/style.css' %}">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>NTI DevOps Notes</h1>
+      <p class="meta">
+        Served by pod <code>{{ hostname }}</code> · version <code>{{ version }}</code>
+        {% if visits %} · {{ visits }} visit{{ visits|pluralize }} (Redis){% else %} · Redis unavailable{% endif %}
+      </p>
+    </header>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Add note</button>
+    </form>
+
+    <section>
+      <h2>Notes (PostgreSQL)</h2>
+      {% for note in notes %}
+        <article>
+          <h3>{{ note.title }}</h3>
+          {% if note.body %}<p>{{ note.body|linebreaksbr }}</p>{% endif %}
+          {% if note.attachment %}<p><a href="{{ note.attachment.url }}">Attachment</a></p>{% endif %}
+          <time>{{ note.created_at|date:"Y-m-d H:i" }} UTC</time>
+        </article>
+      {% empty %}
+        <p class="empty">No notes yet. Add the first one above.</p>
+      {% endfor %}
+    </section>
+  </main>
+</body>
+</html>

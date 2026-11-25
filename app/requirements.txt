@@ -1,0 +1,12 @@
+# Pinned to exact versions so every build (laptop, Jenkins, Trivy scan) uses
+# the same code. Tested together on Python 3.13 + PostgreSQL 16 + Redis 7.
+# To upgrade: change a pin, rebuild, run the tests, let Trivy re-scan.
+Django==5.2.19                # LTS, security support until April 2028
+psycopg[binary]==3.3.9        # PostgreSQL driver
+dj-database-url==2.3.0        # parses DATABASE_URL
+redis==5.3.1                  # client for Django's built-in Redis cache backend
+gunicorn==23.0.0              # WSGI server (the "app server" behind the ALB/Nginx)
+whitenoise==6.12.0            # serves /static/ directly from Gunicorn
+django-prometheus==2.5.0      # /metrics endpoint for Prometheus (Lab 17/18)
+django-storages[s3]==1.14.6   # optional S3 storage for uploads (Lab 03 bucket)
+boto3==1.44.11                # AWS SDK used by django-storages
