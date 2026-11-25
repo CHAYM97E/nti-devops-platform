@@ -1,0 +1,9 @@
+# Normalize all text files to LF in the repo and in working copies,
+# so shell scripts work in Linux containers even when edited on Windows.
+* text=auto eol=lf
+
+# Binary files: never touch line endings
+*.png binary
+*.jpg binary
+*.ico binary
+*.zip binary
