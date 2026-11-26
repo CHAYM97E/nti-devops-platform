@@ -76,3 +76,25 @@ class MetricsTests(TestCase):
         response = self.client.get("/metrics")
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"django_http_requests", response.content)
+
+
+class ProductionBackendsImportTests(TestCase):
+    """
+    Tests run with an in-memory cache, so they would never notice a missing
+    Redis library. Import the PRODUCTION backends explicitly so a missing
+    dependency in requirements.txt fails CI instead of the running container.
+    """
+
+    def test_production_cache_backend_is_importable(self):
+        from django.utils.module_loading import import_string
+
+        from config.settings import base
+
+        import_string(base.CACHES["default"]["BACKEND"])
+
+    def test_production_database_backend_is_importable(self):
+        import importlib
+
+        from config.settings import base
+
+        importlib.import_module(base.DATABASES["default"]["ENGINE"] + ".base")

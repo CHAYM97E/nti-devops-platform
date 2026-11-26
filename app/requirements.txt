@@ -4,7 +4,8 @@
 Django==5.2.19                # LTS, security support until April 2028
 psycopg[binary]==3.3.9        # PostgreSQL driver
 dj-database-url==2.3.0        # parses DATABASE_URL
-redis==5.3.1                  # client for Django's built-in Redis cache backend
+django-redis==5.4.0           # Redis cache backend (required by django-prometheus RedisCache)
+redis==5.3.1                  # Redis client library used by django-redis
 gunicorn==23.0.0              # WSGI server (the "app server" behind the ALB/Nginx)
 whitenoise==6.12.0            # serves /static/ directly from Gunicorn
 django-prometheus==2.5.0      # /metrics endpoint for Prometheus (Lab 17/18)
