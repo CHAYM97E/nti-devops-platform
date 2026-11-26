@@ -1,15 +1,20 @@
 ###############################################################################
 # Test override used by Jenkins (Lab 16) and by you locally:
 #
-#   docker compose -f docker-compose.yml -f docker-compose.test.yml \
+#   docker compose -p nti-test -f docker-compose.yml -f docker-compose.test.yml \
 #     run --rm app python manage.py test --verbosity=2
+#   docker compose -p nti-test -f docker-compose.yml -f docker-compose.test.yml down -v
 #
-# Throwaway DB on tmpfs, no Nginx, no migrations against a real database.
+# -p nti-test keeps it separate from the dev stack. Throwaway DB on tmpfs.
 ###############################################################################
 services:
   postgres:
     environment:
       POSTGRES_PASSWORD: testpassword
+    # Compose MERGES lists across files, so the dev volume (pgdata) would still be
+    # mounted at the same path as the tmpfs. !reset clears the inherited list:
+    # tests get an empty RAM-backed database every run and never touch dev data.
+    volumes: !reset []
     tmpfs:
       - /var/lib/postgresql/data
 
@@ -19,6 +24,7 @@ services:
       SECRET_KEY: test-only
       DB_PASSWORD: testpassword
       RUN_MIGRATIONS: "false"
+    volumes: !reset []      # tests don't need the uploads volume
 
   nginx:
     profiles: ["donotstart"]
